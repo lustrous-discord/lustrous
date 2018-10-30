@@ -18,6 +18,7 @@ class Lustrous::API
 
   enum HttpMethod; GET, PUT, POST, PATCH, DELETE end
   private def request(method : HttpMethod, path : String, args = {} of String => JSON::Any)
+    path, args = fmtpath(path, args)
     response = case method
     when .put?     then @discord[path].put     form: args.to_json
     when .post?    then @discord[path].post    form: args.to_json
@@ -29,6 +30,15 @@ class Lustrous::API
 
     return nil if response.status_code/100 != 2
     JSON.parse(response.body)
+  end
+
+  private def fmtpath(path : String, args = {} of String => JSON::Any)
+    newp = path
+    args.select {|k,v| path.includes? "%#{k}%"}.each do |key, value|
+      newp = newp.gsub("%#{key}%", value.to_s)
+    end
+
+    {newp, args.reject {|k,v| path.includes? "%#{k}%"}}
   end
 
   private macro endpoint(name, method, path, *args)
