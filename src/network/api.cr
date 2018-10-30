@@ -32,10 +32,11 @@ class Lustrous::API
     JSON.parse(response.body)
   end
 
-  private def fmtpath(path : String, args = {} of String => JSON::Any)
-    newp = path
+  private def fmtpath(path : String, args = {} of String => JSON::Any, limit = 0)
+    newp, loopc = path, 0
     args.select {|k,v| path.includes? "%#{k}%"}.each do |key, value|
       newp = newp.gsub("%#{key}%", value.to_s)
+      break if limit && (loopc += 1) >= limit
     end
 
     {newp, args.reject {|k,v| path.includes? "%#{k}%"}}
