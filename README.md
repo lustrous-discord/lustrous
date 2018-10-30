@@ -7,7 +7,7 @@ A Discord API library written in Crystal, aimed at simplicity and ease of use.
 **Another Discord library? Really?**
 > Yes. Deal with it.
 
-**What about [discordcr](/meew0/discordcr)?** 
+**What about [discordcr](https://github.com/meew0/discordcr)?** 
 > Discordcr is great, and so is meew0's other major library, discordrb, which discordcr draws heavy inspiration from. However, development on discordcr is slow, and it's very much still in "functionality first" development; ease of use features fall to the wayside, even to the point of having to manually handle caching. I'd prefer something a bit easier to work with, thus why I'm creating Lustrous.
 
 **Isn't Crystal itself still in alpha?**
