@@ -1,0 +1,12 @@
+name: lustrous
+version: 0.1.0
+
+authors:
+  - tripl3dogdare
+
+crystal: 0.26.1
+license: MIT
+
+dependencies:
+  crest:
+    github: mamantoha/crest
