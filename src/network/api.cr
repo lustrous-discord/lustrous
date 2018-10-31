@@ -1,4 +1,5 @@
 require "../lustrous"
+require "../data/*"
 require "crest"
 require "http"
 require "json"
@@ -54,7 +55,6 @@ class Lustrous::API
   # - Implement file uploads
   # - Implement role types
   # - Implement embed types
-  # - Implement channel types
   # - Abstract out perm override types
   # - Fix content splatting for modify_guild_role_positions
   # - Fix content splatting for modify_guild_channel_positions
@@ -195,7 +195,7 @@ class Lustrous::API
     default_message_notifications : Int,
     explicit_content_filter       : Int,
     roles                         : Array(Hash(String, JSON::Any)), # TODO: Implement role types
-    channels                      : Array(Hash(String, JSON::Any))  # TODO: Implement channel types
+    channels                      : Array(GuildChannel)
   endpoint get_guild, GET, "/guilds/%gid%",
     gid : UInt64
   endpoint modify_guild, PATCH, "/guilds/%gid%",
