@@ -23,13 +23,19 @@ class Lustrous::API
     path, args = fmtpath(path, args)
     body = args["_arrbody"]?.as? Array(JSON::Any)
 
-    response = case method
-    when .put?     then @discord[path].put     form: (body || args).to_json
-    when .post?    then @discord[path].post    form: (body || args).to_json
-    when .patch?   then @discord[path].patch   form: (body || args).to_json
-    when .get?     then @discord[path].get     params: args.transform_values &.to_s
-    when .delete?  then @discord[path].delete  params: args.transform_values &.to_s
-    else raise "Invalid method #{method} passed to Lustrous::API#request - this is a bug!"
+    if method.post? && args["file"]?
+      response = @discord[path].post(
+        form: args.transform_values &.to_s, 
+        headers: {"Content-Type" => "multipart/form-data"})
+    else
+      response = case method
+      when .put?     then @discord[path].put     form: (body || args).to_json
+      when .post?    then @discord[path].post    form: (body || args).to_json
+      when .patch?   then @discord[path].patch   form: (body || args).to_json
+      when .get?     then @discord[path].get     params: args.transform_values &.to_s
+      when .delete?  then @discord[path].delete  params: args.transform_values &.to_s
+      else raise "Invalid method #{method} passed to Lustrous::API#request - this is a bug!"
+      end
     end
 
     return nil if response.status_code/100 != 2
@@ -54,7 +60,6 @@ class Lustrous::API
   end
 
   # TODO: Finish up API method details
-  # - Implement file uploads
   # - Implement embed types
 
   endpoint get_gateway, GET, "/gateway"
@@ -96,7 +101,7 @@ class Lustrous::API
     content : String,
     nonce   : UInt64? = nil,
     tts     : Bool? = nil,
-    file    : Nil = nil,                     # TODO: Implement file uploads
+    file    : String? = nil,
     embed   : Hash(String, JSON::Any)? = nil # TODO: Implement embed types
   endpoint create_reaction, PUT, "/channels/%cid%/messages/%mid%/reactions/%emoji%/@me",
     cid   : UInt64,
@@ -400,7 +405,7 @@ class Lustrous::API
     username   : String? = nil,
     avatar_url : String? = nil,
     tts        : Boolean? = nil,
-    file       : Nil = nil,                            # TODO: Implement file uploads
+    file       : String? = nil,
     embeds     : Array(Hash(String, JSON::Any))? = nil # TODO: Implement embed types
   # endpoint execute_slack_compatible_webhook, POST, "/webhooks/%wid%/%wtoken%/slack",
   #   wid : UInt64,
