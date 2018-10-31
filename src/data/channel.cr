@@ -21,12 +21,10 @@ abstract class TextChannel < BaseChannel
 end
 
 module GuildChannel
-  macro included
-    getter guild_id              : UInt64
-    getter position              : Int32
-    getter parent_id             : UInt64? = nil
-    getter permission_overwrites : Array(PermissionOverwrite)? = nil
-  end
+  getter guild_id              : UInt64
+  getter position              : Int32
+  getter parent_id             : UInt64? = nil
+  getter permission_overwrites : Array(PermissionOverwrite)? = nil
 end
 
 class GuildTextChannel < TextChannel
