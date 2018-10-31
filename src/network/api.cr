@@ -1,5 +1,6 @@
 require "../lustrous"
 require "crest"
+require "http"
 require "json"
 
 # TODO: Implement remaining API methods
@@ -55,7 +56,6 @@ class Lustrous::API
   # - Implement embed types
   # - Implement channel types
   # - Abstract out perm override types
-  # - Fix parameter case for create_guild_ban
   # - Fix content splatting for modify_guild_role_positions
   # - Fix content splatting for modify_guild_channel_positions
 
@@ -271,11 +271,17 @@ class Lustrous::API
   endpoint get_guild_ban, GET, "/guilds/%gid%/bans/%uid%",
     gid : UInt64,
     uid : UInt64
-  endpoint create_guild_ban, PUT, "/guilds/%gid%/bans/%uid%",
+  def create_guild_ban(
     gid                 : UInt64,
     uid                 : UInt64,
-    delete_message_days : Int? = nil, # TODO: Fix this - should be skewer case (I really hate this endpoint)
-    reason              : String? = nil
+    delete_message_days : Int? = nil,
+    reason              : String? = nil )
+    path = "/guilds/%gid%/bans/%uid%?" + HTTP::Params.build do |qs|
+      qs.add("delete-message-days", delete_message_days) if delete_message_days
+      qs.add("reason", reason) if reason
+    end
+    request(HttpMethod::PUT, path, {"gid"=>gid,"uid"=>uid})
+  end
   endpoint remove_guild_ban, DELETE, "/guilds/%gid%/bans/%uid%",
     gid : UInt64,
     uid : UInt64
