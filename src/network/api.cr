@@ -45,10 +45,225 @@ class Lustrous::API
   private macro endpoint(name, method, path, *args)
     def {{name.id}}({{*args}})
       request(HttpMethod::{{method.id}}, {{path}},
-        {% if !args.empty? %} { {% for arg in args %} "{{arg.var}}" => {{arg.var}} {% end %} } {% end %})
+        {% if !args.empty? %} { {% for arg in args %} "{{arg.var}}" => {{arg.var}}, {% end %} } {% end %})
     end
   end
 
   endpoint get_gateway,     GET, "/gateway"
   endpoint get_gateway_bot, GET, "/gateway/bot"
+
+  endpoint get_guild_audit_log, GET, "/guilds/%gid%/audit-logs",
+    gid : UInt64
+
+  endpoint get_channel, GET, "/channels/%cid%",
+    cid : UInt64
+  endpoint modify_channel,                     PATCH,   "/channels/%cid%",
+    cid : UInt64
+  endpoint delete_channel,                     DELETE,  "/channels/%cid%",
+    cid : UInt64
+  endpoint get_channel_messages,               GET,     "/channels/%cid%/messages",
+    cid : UInt64
+  endpoint get_channel_message,                GET,     "/channels/%cid%/messages/%mid%",
+    cid : UInt64,
+    mid : UInt64
+  endpoint create_message,                     POST,    "/channels/%cid%/messages",
+    cid : UInt64
+  endpoint create_reaction,                    PUT,     "/channels/%cid%/messages/%mid%/reactions/%emoji%/@me",
+    cid : UInt64,
+    mid : UInt64
+  endpoint delete_own_reaction,                DELETE,  "/channels/%cid%/messages/%mid%/reactions/%emoji%/@me",
+    cid : UInt64,
+    mid : UInt64
+  endpoint delete_user_reaction,               DELETE,  "/channels/%cid%/messages/%mid%/reactions/%emoji%/%uid%",
+    cid : UInt64,
+    mid : UInt64
+  endpoint get_reactions,                      GET,     "/channels/%cid%/messages/%mid%/reactions/%emoji%",
+    cid : UInt64,
+    mid : UInt64
+  endpoint delete_all_reactions,               DELETE,  "/channels/%cid%/messages/%mid%/reactions",
+    cid : UInt64,
+    mid : UInt64
+  endpoint edit_message,                       PATCH,   "/channels/%cid%/messages/%mid%",
+    cid : UInt64,
+    mid : UInt64
+  endpoint delete_message,                     DELETE,  "/channels/%cid%/messages/%mid%",
+    cid : UInt64,
+    mid : UInt64
+  endpoint bulk_delete_messages,               POST,    "/channels/%cid%/messages/bulk-delete",
+    cid : UInt64
+  endpoint edit_channel_permissions,           PUT,     "/channels/%cid%/permissions/%oid%",
+    cid : UInt64
+  endpoint get_channel_invites,                GET,     "/channels/%cid%/invites",
+    cid : UInt64
+  endpoint create_channel_invite,              POST,    "/channels/%cid%/invites",
+    cid : UInt64
+  endpoint delete_channel_permission,          DELETE,  "/channels/%cid%/permissions/%oid%",
+    cid : UInt64
+  endpoint trigger_typing_indicator,           POST,    "/channels/%cid%/typing",
+    cid : UInt64
+  endpoint get_pinned_messages,                GET,     "/channels/%cid%/pins",
+    cid : UInt64
+  endpoint add_pinned_channel_message,         PUT,     "/channels/%cid%/pins/%mid%",
+    cid : UInt64,
+    mid : UInt64
+  endpoint delete_pinned_channel_message,      DELETE,  "/channels/%cid%/pins/%mid%",
+    cid : UInt64,
+    mid : UInt64
+  endpoint group_dm_add_recipient,             PUT,     "/channels/%cid%/recipients/%uid%",
+    cid : UInt64
+  endpoint group_dm_remove_recipient,          DELETE,  "/channels/%cid%/recipients/%uid%",
+    cid : UInt64
+
+  endpoint list_guild_emojis,                  GET,     "/guilds/%gid%/emojis",
+    gid : UInt64
+  endpoint get_guild_emoji,                    GET,     "/guilds/%gid%/emojis/%eid%",
+    gid : UInt64,
+    eid : UInt64
+  endpoint create_guild_emoji,                 POST,    "/guilds/%gid%/emojis",
+    gid : UInt64
+  endpoint modify_guild_emoji,                 PATCH,   "/guilds/%gid%/emojis/%eid%",
+    gid : UInt64,
+    eid : UInt64
+  endpoint delete_guild_emoji,                 DELETE,  "/guilds/%gid%/emojis/%eid%",
+    gid : UInt64,
+    eid : UInt64
+
+  endpoint create_guild,                       POST,    "/guilds",
+    gid : UInt64
+  endpoint get_guild,                          GET,     "/guilds/%gid%",
+    gid : UInt64
+  endpoint modify_guild,                       PATCH,   "/guilds/%gid%",
+    gid : UInt64
+  endpoint delete_guild,                       DELETE,  "/guilds/%gid%",
+    gid : UInt64
+  endpoint get_guild_channels,                 GET,     "/guilds/%gid%/channels",
+    gid : UInt64
+  endpoint create_guild_channel,               POST,    "/guilds/%gid%/channels",
+    gid : UInt64
+  endpoint modify_guild_channel_positions,     PATCH,   "/guilds/%gid%/channels",
+    gid : UInt64
+  endpoint get_guild_member,                   GET,     "/guilds/%gid%/members/%uid%",
+    gid : UInt64,
+    uid : UInt64
+  endpoint list_guild_members,                 GET,     "/guilds/%gid%/members",
+    gid : UInt64
+  endpoint add_guild_member,                   PUT,     "/guilds/%gid%/members/%uid%",
+    gid : UInt64,
+    uid : UInt64
+  endpoint modify_guild_member,                PATCH,   "/guilds/%gid%/members/%uid%",
+    gid : UInt64,
+    uid : UInt64
+  endpoint modify_current_user_nick,           PATCH,   "/guilds/%gid%/members/@me/nick",
+    gid : UInt64
+  endpoint add_guild_member_role,              PUT,     "/guilds/%gid%/members/%uid%/roles/%rid%",
+    gid : UInt64,
+    uid : UInt64,
+    rid : UInt64
+  endpoint remove_guild_member_role,           DELETE,  "/guilds/%gid%/members/%uid%/roles/%rid%",
+    gid : UInt64,
+    uid : UInt64,
+    rid : UInt64
+  endpoint remove_guild_member,                DELETE,  "/guilds/%gid%/members/%uid%",
+    gid : UInt64,
+    uid : UInt64
+  endpoint get_guild_bans,                     GET,     "/guilds/%gid%/bans",
+    gid : UInt64
+  endpoint get_guild_ban,                      GET,     "/guilds/%gid%/bans/%uid%",
+    gid : UInt64,
+    uid : UInt64
+  endpoint create_guild_ban,                   PUT,     "/guilds/%gid%/bans/%uid%",
+    gid : UInt64,
+    uid : UInt64
+  endpoint remove_guild_ban,                   DELETE,  "/guilds/%gid%/bans/%uid%",
+    gid : UInt64,
+    uid : UInt64
+  endpoint get_guild_roles,                    GET,     "/guilds/%gid%/roles",
+    gid : UInt64
+  endpoint create_guild_role,                  POST,    "/guilds/%gid%/roles",
+    gid : UInt64
+  endpoint modify_guild_role_positions,        PATCH,   "/guilds/%gid%/roles",
+    gid : UInt64
+  endpoint modify_guild_role,                  PATCH,   "/guilds/%gid%/roles/%rid%",
+    gid : UInt64,
+    rid : UInt64
+  endpoint delete_guild_role,                  DELETE,  "/guilds/%gid%/roles/%rid%",
+    gid : UInt64,
+    rid : UInt64
+  endpoint get_guild_prune_count,              GET,     "/guilds/%gid%/prune",
+    gid : UInt64
+  endpoint begin_guild_prune,                  POST,    "/guilds/%gid%/prune",
+    gid : UInt64
+  endpoint get_guild_voice_regions,            GET,     "/guilds/%gid%/regions",
+    gid : UInt64
+  endpoint get_guild_invites,                  GET,     "/guilds/%gid%/invites",
+    gid : UInt64
+  endpoint get_guild_integrations,             GET,     "/guilds/%gid%/integrations",
+    gid : UInt64
+  endpoint create_guild_integration,           POST,    "/guilds/%gid%/integrations",
+    gid : UInt64
+  endpoint modify_guild_integration,           PATCH,   "/guilds/%gid%/integrations/%iid%",
+    gid : UInt64,
+    iid : UInt64
+  endpoint delete_guild_integration,           DELETE,  "/guilds/%gid%/integrations/%iid%",
+    gid : UInt64,
+    iid : UInt64
+  endpoint sync_guild_integration,             POST,    "/guilds/%gid%/integrations/%iid%/sync",
+    gid : UInt64,
+    iid : UInt64
+  endpoint get_guild_embed,                    GET,     "/guilds/%gid%/embed",
+    gid : UInt64
+  endpoint modify_guild_embed,                 PATCH,   "/guilds/%gid%/embed",
+    gid : UInt64
+  endpoint get_guild_vanity_url,               GET,     "/guilds/%gid%/vanity-url",
+    gid : UInt64
+
+  endpoint get_invite,                         GET,     "/invites/%icode%",
+    icode : String
+  endpoint delete_invite,                      DELETE,  "/invites/%icode%",
+    icode : String
+
+  endpoint get_current_user,                   GET,     "/users/@me"
+  endpoint get_user,                           GET,     "/users/%uid%",
+    uid : UInt64
+  endpoint modify_current_user,                PATCH,   "/users/@me"
+  endpoint get_current_user_guilds,            GET,     "/users/@me/guilds"
+  endpoint leave_guild,                        DELETE,  "/users/@me/guilds/%gid%",
+    gid : UInt64
+  endpoint get_user_dms,                       GET,     "/users/@me/channels"
+  endpoint create_dm,                          POST,    "/users/@me/channels"
+  endpoint create_group_dm,                    POST,    "/users/@me/channels"
+  endpoint get_user_connections,               GET,     "/users/@me/connections"
+
+  endpoint list_voice_regions,                 GET,     "/voice/regions"
+
+  endpoint create_webhook,                     POST,    "/channels/%cid%/webhooks",
+    cid : UInt64
+  endpoint get_channel_webhooks,               GET,     "/channels/%cid%/webhooks",
+    cid : UInt64
+  endpoint get_guild_webhooks,                 GET,     "/guilds/%gid%/webhooks",
+    gid : UInt64
+  endpoint get_webhook,                        GET,     "/webhooks/%wid%",
+    wid : UInt64
+  endpoint get_webhook_with_token,             GET,     "/webhooks/%wid%/%wtoken%",
+    wid : UInt64,
+    wtoken : String
+  endpoint modify_webhook,                     PATCH,   "/webhooks/%wid%",
+    wid : UInt64
+  endpoint modify_webhook_with_token,          PATCH,   "/webhooks/%wid%/%wtoken%",
+    wid : UInt64,
+    wtoken : String
+  endpoint delete_webhook,                     DELETE,  "/webhooks/%wid%",
+    wid : UInt64
+  endpoint delete_webhook_with_token,          DELETE,  "/webhooks/%wid%/%wtoken%",
+    wid : UInt64,
+    wtoken : String
+  endpoint execute_webhook,                    POST,    "/webhooks/%wid%/%wtoken%",
+    wid : UInt64,
+    wtoken : String
+  endpoint execute_slack_compatible_webhook,   POST,    "/webhooks/%wid%/%wtoken%/slack",
+    wid : UInt64,
+    wtoken : String
+  endpoint execute_github_compatible_webhook,  POST,    "/webhooks/%wid%/%wtoken%/github",
+    wid : UInt64,
+    wtoken : String
 end
