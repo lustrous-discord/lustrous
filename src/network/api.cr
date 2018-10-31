@@ -13,7 +13,8 @@ class Lustrous::API
     @discord = Crest::Resource.new("https://discordapp.com/api/v6") do |resource|
       resource.headers.merge!({
         "Authorization" => "Bot "+@token,
-        "User-Agent"    => "DiscordBot (#{Lustrous::URL}, #{Lustrous::VER})"
+        "User-Agent"    => "DiscordBot (#{Lustrous::URL}, #{Lustrous::VER})",
+        "Content-Type"  => "application/json"
       })
     end
   end
