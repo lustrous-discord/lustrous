@@ -21,10 +21,12 @@ class Lustrous::API
   enum HttpMethod; GET, PUT, POST, PATCH, DELETE end
   private def request(method : HttpMethod, path : String, args = {} of String => JSON::Any)
     path, args = fmtpath(path, args)
+    body = args["_arrbody"]?.as? Array(JSON::Any)
+
     response = case method
-    when .put?     then @discord[path].put     form: args.to_json
-    when .post?    then @discord[path].post    form: args.to_json
-    when .patch?   then @discord[path].patch   form: args.to_json
+    when .put?     then @discord[path].put     form: (body || args).to_json
+    when .post?    then @discord[path].post    form: (body || args).to_json
+    when .patch?   then @discord[path].patch   form: (body || args).to_json
     when .get?     then @discord[path].get     params: args.transform_values &.to_s
     when .delete?  then @discord[path].delete  params: args.transform_values &.to_s
     else raise "Invalid method #{method} passed to Lustrous::API#request - this is a bug!"
@@ -54,8 +56,6 @@ class Lustrous::API
   # TODO: Finish up API method details
   # - Implement file uploads
   # - Implement embed types
-  # - Fix content splatting for modify_guild_role_positions
-  # - Fix content splatting for modify_guild_channel_positions
 
   endpoint get_gateway, GET, "/gateway"
   endpoint get_gateway_bot, GET, "/gateway/bot"
@@ -226,7 +226,7 @@ class Lustrous::API
     nsfw                  : Bool? = nil
   endpoint modify_guild_channel_positions, PATCH, "/guilds/%gid%/channels",
     gid      : UInt64,
-    channels : Array({id: UInt64, position: Int}) # TODO: Implement, this needs to be splatted as the full content
+    _arrbody : Array({id: UInt64, position: Int})
   endpoint get_guild_member, GET, "/guilds/%gid%/members/%uid%",
     gid : UInt64,
     uid : UInt64
@@ -293,8 +293,8 @@ class Lustrous::API
     hoist       : Bool? = nil,
     mentionable : Bool? = nil
   endpoint modify_guild_role_positions, PATCH, "/guilds/%gid%/roles",
-    gid   : UInt64,
-    roles : Array({id: UInt64, position: Int}) # TODO: Implement, this needs to be splatted as the full content
+    gid      : UInt64,
+    _arrbody : Array({id: UInt64, position: Int})
   endpoint modify_guild_role, PATCH, "/guilds/%gid%/roles/%rid%",
     gid         : UInt64,
     rid         : UInt64,
