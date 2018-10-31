@@ -1,3 +1,4 @@
+require "./*"
 require "json"
 
 abstract class BaseChannel
@@ -30,7 +31,7 @@ class GuildTextChannel < TextChannel
   getter nsfw                  : Bool?   = nil
   getter parent_id             : UInt64? = nil
   getter rate_limit_per_user   : Int32?    = nil
-  getter permission_overwrites : { id: UInt64, type: String, allow: Int32, deny: Int32 }? = nil
+  getter permission_overwrites : Array(PermissionOverwrite)? = nil
 end
 
 class DMChannel < TextChannel
@@ -58,7 +59,7 @@ class VoiceChannel < BaseChannel
   getter position              : Int32
   getter user_limit            : Int32?    = nil
   getter parent_id             : UInt64? = nil
-  getter permission_overwrites : { id: UInt64, type: String, allow: Int32, deny: Int32 }? = nil
+  getter permission_overwrites : Array(PermissionOverwrite)? = nil
 end
 
 class ChannelCategory < BaseChannel
@@ -68,7 +69,7 @@ class ChannelCategory < BaseChannel
   getter guild_id              : UInt64
   getter position              : Int32
   getter parent_id             : UInt64? = nil
-  getter permission_overwrites : { id: UInt64, type: String, allow: Int32, deny: Int32 }? = nil
+  getter permission_overwrites : Array(PermissionOverwrite)? = nil
 end
 
 alias GuildChannel = GuildTextChannel | VoiceChannel | ChannelCategory

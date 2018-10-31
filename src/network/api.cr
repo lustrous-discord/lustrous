@@ -53,9 +53,7 @@ class Lustrous::API
 
   # TODO: Finish up API method details
   # - Implement file uploads
-  # - Implement role types
   # - Implement embed types
-  # - Abstract out perm override types
   # - Fix content splatting for modify_guild_role_positions
   # - Fix content splatting for modify_guild_channel_positions
 
@@ -80,7 +78,7 @@ class Lustrous::API
     rate_limit_per_user   : Int? = nil,
     bitrate               : Int? = nil,
     user_limit            : Int? = nil,
-    permission_overwrites : Array({ id: UInt64, type: String, allow: Int, deny: Int })? = nil,
+    permission_overwrites : Array(PermissionOverwrite)? = nil,
     parent_id             : UInt64? = nil
   endpoint delete_channel, DELETE, "/channels/%cid%",
     cid : UInt64
@@ -194,7 +192,7 @@ class Lustrous::API
     verification_level            : Int,
     default_message_notifications : Int,
     explicit_content_filter       : Int,
-    roles                         : Array(Hash(String, JSON::Any)), # TODO: Implement role types
+    roles                         : Array(Role),
     channels                      : Array(GuildChannel)
   endpoint get_guild, GET, "/guilds/%gid%",
     gid : UInt64
@@ -223,7 +221,7 @@ class Lustrous::API
     bitrate               : Int? = nil,
     user_limit            : Int? = nil,
     rate_limit_per_user   : Int? = nil,
-    permission_overwrites : Array({ id: UInt64, type: String, allow: Int, deny: Int })? = nil,
+    permission_overwrites : Array(PermissionOverwrite)? = nil,
     parent_id             : UInt64? = nil,
     nsfw                  : Bool? = nil
   endpoint modify_guild_channel_positions, PATCH, "/guilds/%gid%/channels",
